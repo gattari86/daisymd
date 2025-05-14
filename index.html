@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daisy MD Care Skincare Quiz</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-text: #0e3a47;
+            --accent: #6dd1ca;
+            --background: #f7f8f2;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--primary-text);
+            background-color: var(--background);
+        }
+        h1, h2, h3, .question-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 20px;
+        }
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .answer-option {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .answer-option:hover {
+            border-color: var(--accent);
+            background-color: rgba(109, 209, 202, 0.1);
+        }
+        .answer-option.selected {
+            border-color: var(--accent);
+            background-color: rgba(109, 209, 202, 0.2);
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            transition: width 0.5s ease;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .result-card {
+            border-left: 4px solid var(--accent);
+        }
+        .quiz-section {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-out {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="py-8 px-4">
+    <div class="quiz-container bg-white p-6 md:p-8">
+        <!-- Quiz Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-2xl md:text-3xl mb-2">Daisy MD Care Skincare Quiz</h1>
+            <p class="text-gray-600">Find your perfect skincare match in just a few questions</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar mb-8">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+
+        <!-- Quiz Content -->
+        <div id="quiz-content">
+            <!-- Question 1 -->
+            <div class="quiz-section" id="question-1">
+                <h2 class="question-title mb-4">Which of the following best describes your current skin concern?</h2>
+                <div class="space-y-3">
+                    <div class="answer-option p-4 cursor-pointer" data-value="acne" onclick="selectAnswer(this, 1)">
+                        <p>Acne or breakouts</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="sensitive" onclick="selectAnswer(this, 1)">
+                        <p>Sensitive or easily irritated skin</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="discoloration" onclick="selectAnswer(this, 1)">
+                        <p>Dark spots, uneven tone, or sun damage</p>
+                    </div>
+                </div>
+                <div class="mt-6 text-right">
+                    <button class="btn" id="next-1" disabled onclick="nextQuestion(1)">Next</button>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="quiz-section hidden" id="question-2">
+                <h2 class="question-title mb-4">Do you currently have active acne breakouts?</h2>
+                <div class="space-y-3">
+                    <div class="answer-option p-4 cursor-pointer" data-value="yes" onclick="selectAnswer(this, 2)">
+                        <p>Yes, I have active breakouts</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="no" onclick="selectAnswer(this, 2)">
+                        <p>No, my skin is currently clear</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-between">
+                    <button class="btn bg-gray-300" onclick="prevQuestion(2)">Back</button>
+                    <button class="btn" id="next-2" disabled onclick="nextQuestion(2)">Next</button>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="quiz-section hidden" id="question-3">
+                <h2 class="question-title mb-4">Would you describe your skin as reactive or sensitive to products?</h2>
+                <div class="space-y-3">
+                    <div class="answer-option p-4 cursor-pointer" data-value="yes" onclick="selectAnswer(this, 3)">
+                        <p>Yes, my skin is reactive/sensitive</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="somewhat" onclick="selectAnswer(this, 3)">
+                        <p>Somewhat, it depends on the product</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="no" onclick="selectAnswer(this, 3)">
+                        <p>No, my skin tolerates most products well</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-between">
+                    <button class="btn bg-gray-300" onclick="prevQuestion(3)">Back</button>
+                    <button class="btn" id="next-3" disabled onclick="nextQuestion(3)">Next</button>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="quiz-section hidden" id="question-4">
+                <h2 class="question-title mb-4">Has your skin ever been diagnosed as rosacea-prone or inflammation-prone?</h2>
+                <div class="space-y-3">
+                    <div class="answer-option p-4 cursor-pointer" data-value="yes" onclick="selectAnswer(this, 4)">
+                        <p>Yes, I have rosacea or inflammation-prone skin</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="unsure" onclick="selectAnswer(this, 4)">
+                        <p>I'm not sure, but my skin gets red easily</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="no" onclick="selectAnswer(this, 4)">
+                        <p>No, I don't have these conditions</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-between">
+                    <button class="btn bg-gray-300" onclick="prevQuestion(4)">Back</button>
+                    <button class="btn" id="next-4" disabled onclick="nextQuestion(4)">Next</button>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="quiz-section hidden" id="question-5">
+                <h2 class="question-title mb-4">Are you dealing with acne only, dark marks left behind, or both?</h2>
+                <div class="space-y-3">
+                    <div class="answer-option p-4 cursor-pointer" data-value="acne" onclick="selectAnswer(this, 5)">
+                        <p>Mainly active acne</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="both" onclick="selectAnswer(this, 5)">
+                        <p>Both acne and dark spots</p>
+                    </div>
+                    <div class="answer-option p-4 cursor-pointer" data-value="marks" onclick="selectAnswer(this, 5)">
+                        <p>Mainly dark spots/marks left behind</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-between">
+                    <button class="btn bg-gray-300" onclick="prevQuestion(5)">Back</button>
+                    <button class="btn" id="next-5" disabled onclick="submitQuiz()">Get Results</button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="quiz-section hidden" id="results">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl mb-2">Your Personalized Recommendation</h2>
+                    <p class="text-gray-600">Based on your skin concerns</p>
+                </div>
+                
+                <div class="result-card p-6 bg-gray-50 rounded-lg mb-6">
+                    <h3 class="text-xl mb-3" id="result-title">Recommended Kit</h3>
+                    <p id="result-description" class="mb-4">Description of the recommended kit and why it's appropriate for your skin.</p>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                    <p class="font-semibold">Still not sure? Call Daisy MD at 1-877-877-3030 for help choosing your perfect match.</p>
+                </div>
+                
+                <div class="text-center mt-8">
+                    <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
+                </div>
+                
+                <div class="mt-8 text-sm text-gray-500 p-4 border-t">
+                    <p class="font-semibold">Disclaimer:</p>
+                    <p>This quiz is not a medical diagnosis. It's designed to guide you toward the best Daisy MD Care kit for general skincare needs. For questions about specific skin conditions, please contact Daisy MD directly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz state variables
+        const userAnswers = {
+            1: null,
+            2: null,
+            3: null,
+            4: null,
+            5: null
+        };
+        
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+        
+        // Select answer function
+        function selectAnswer(element, questionNumber) {
+            // Remove selection from all options in this question
+            const options = document.querySelectorAll(`#question-${questionNumber} .answer-option`);
+            options.forEach(option => option.classList.remove('selected'));
+            
+            // Add selection to clicked option
+            element.classList.add('selected');
+            
+            // Store answer
+            userAnswers[questionNumber] = element.getAttribute('data-value');
+            
+            // Enable next button
+            document.getElementById(`next-${questionNumber}`).disabled = false;
+        }
+        
+        // Navigation functions
+        function nextQuestion(questionNumber) {
+            const currentSection = document.getElementById(`question-${questionNumber}`);
+            const nextSection = document.getElementById(`question-${questionNumber + 1}`);
+            
+            // Handle animation
+            currentSection.classList.add('fade-out');
+            
+            setTimeout(() => {
+                currentSection.classList.add('hidden');
+                currentSection.classList.remove('fade-out');
+                
+                nextSection.classList.remove('hidden');
+                setTimeout(() => {
+                    nextSection.classList.add('fade-in');
+                }, 50);
+                
+                // Update progress bar
+                currentQuestion = questionNumber + 1;
+                updateProgressBar();
+            }, 300);
+        }
+        
+        function prevQuestion(questionNumber) {
+            const currentSection = document.getElementById(`question-${questionNumber}`);
+            const prevSection = document.getElementById(`question-${questionNumber - 1}`);
+            
+            // Handle animation
+            currentSection.classList.add('fade-out');
+            
+            setTimeout(() => {
+                currentSection.classList.add('hidden');
+                currentSection.classList.remove('fade-out');
+                
+                prevSection.classList.remove('hidden');
+                setTimeout(() => {
+                    prevSection.classList.add('fade-in');
+                }, 50);
+                
+                // Update progress bar
+                currentQuestion = questionNumber - 1;
+                updateProgressBar();
+            }, 300);
+        }
+        
+        function updateProgressBar() {
+            const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+        }
+        
+        function submitQuiz() {
+            // Hide last question
+            document.getElementById(`question-${totalQuestions}`).classList.add('hidden');
+            
+            // Show results
+            const resultsSection = document.getElementById('results');
+            resultsSection.classList.remove('hidden');
+            
+            // Set progress bar to 100%
+            document.getElementById('progress-fill').style.width = '100%';
+            
+            // Determine recommendation based on answers
+            const recommendation = determineRecommendation();
+            
+            // Display recommendation
+            document.getElementById('result-title').textContent = recommendation.title;
+            document.getElementById('result-description').textContent = recommendation.description;
+        }
+        
+        function determineRecommendation() {
+            // Logic for determining recommendation based on user answers
+            let recommendation = {
+                title: "",
+                description: ""
+            };
+            
+            const mainConcern = userAnswers[1]; // First question about main concern
+            
+            // Discoloration Kit Logic
+            if (mainConcern === 'discoloration' || 
+                (userAnswers[2] === 'no' && userAnswers[5] === 'marks')) {
+                recommendation.title = "Discoloration Kit";
+                recommendation.description = "Based on your answers, we recommend the Discoloration Kit. This specialized formula targets dark spots, uneven tone, and post-acne marks to reveal a more even complexion.";
+                return recommendation;
+            }
+            
+            // Sensitive Skin Acne Kit Logic
+            if (mainConcern === 'sensitive' || 
+                userAnswers[3] === 'yes' || 
+                userAnswers[4] === 'yes' || 
+                userAnswers[4] === 'unsure') {
+                recommendation.title = "Sensitive Skin Acne Kit";
+                recommendation.description = "Based on your answers, we recommend starting with the Sensitive Skin Acne Kit. It's designed for those with active breakouts and a reactive skin barrier, offering effective treatment without causing irritation.";
+                return recommendation;
+            }
+            
+            // Default: Level One Acne Kit
+            recommendation.title = "Level One Acne Kit";
+            recommendation.description = "Based on your answers, we recommend our Level One Acne Kit. This comprehensive solution targets active breakouts while preventing new ones from forming, perfect for addressing your acne concerns.";
+            return recommendation;
+        }
+        
+        function restartQuiz() {
+            // Reset all selections
+            document.querySelectorAll('.answer-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Reset all next buttons
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (document.getElementById(`next-${i}`)) {
+                    document.getElementById(`next-${i}`).disabled = true;
+                }
+            }
+            
+            // Reset answers
+            for (let i = 1; i <= totalQuestions; i++) {
+                userAnswers[i] = null;
+            }
+            
+            // Hide all sections except first question
+            document.querySelectorAll('.quiz-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show first question
+            document.getElementById('question-1').classList.remove('hidden');
+            
+            // Reset progress bar
+            currentQuestion = 1;
+            updateProgressBar();
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // Initialize quiz
+        updateProgressBar();
+    </script>
+</body>
+</html>
